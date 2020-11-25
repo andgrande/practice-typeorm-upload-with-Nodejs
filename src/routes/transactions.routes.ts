@@ -8,6 +8,7 @@ import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
 
 import UploadFiles from '../config/UploadFiles';
+import AppError from '../errors/AppError';
 
 const upload = multer(UploadFiles);
 const transactionsRouter = Router();
@@ -30,6 +31,11 @@ transactionsRouter.get('/balance', async (request, response) => {
 
 transactionsRouter.post('/', async (request, response) => {
   const { title, value, type, category } = request.body;
+
+  if (title === '' || value === 0 || type === '' || category === '') {
+    console.log('Missing parameters');
+    throw new AppError('Missing parameters');
+  }
 
   const createTransaction = new CreateTransactionService();
 
